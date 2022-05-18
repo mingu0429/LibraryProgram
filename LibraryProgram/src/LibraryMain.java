@@ -18,18 +18,17 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class LibraryMain implements ActionListener{
-
+	//컴포넌트 설정
 	JFrame iFrame;
 	JPanel iPaneLbl, temp;
-	JButton byPerson, byBook, Borrow, Return, extProgram;
+	JButton newPerson, newButton, Borrow, Return, extProgram;
 	JLabel iName;
-	
-	JTable bookTable, personTable;
+	JTable bookTable, personTable;//이 프로그램은 JTable을 사용
 	String category[] = {"책이름", "저자", "대출자","분류"};
 	String category2[] = {"회원이름", "나이", "현재 대출 권수", "직업"};
 	String category3[] = {"Student", "Faculty", "Guest", "Staff"};
 	String category4[] = {"Magazine","EBook","Science","Art","Religion","기타"};
-	DefaultTableModel model, model2;
+	DefaultTableModel model, model2;//DefaultTableModel을 사용
 	JScrollPane tbl_sp, tbl_sp2;
 	Person[] libPerson;
 	int countPerson;
@@ -40,21 +39,21 @@ public class LibraryMain implements ActionListener{
 		libBook = new Book[100];		
 		countPerson = countBook = 0;
 		
-		iFrame=new JFrame("도서관리프로그램");
+		iFrame=new JFrame("도서관리프로그램");//J프레임
 		iFrame.setLayout(null);
 		iFrame.setBounds(40, 40, 700, 500);
 		iFrame.setResizable(false);
 		iFrame.getContentPane().setBackground(new Color(50, 150, 100));
 		
-		byPerson=new JButton("회원등록");
-		byPerson.setBounds(30, 20, 150, 40);
-		byPerson.addActionListener(this);
-		iFrame.add(byPerson);
+		newPerson=new JButton("회원등록");//이하 프로그램 구성 버튼
+		newPerson.setBounds(30, 20, 150, 40);
+		newPerson.addActionListener(this);
+		iFrame.add(newPerson);
 
-		byBook=new JButton("도서등록");
-		byBook.setBounds(30, 90, 150, 40);
-		byBook.addActionListener(this);
-		iFrame.add(byBook);
+		newButton=new JButton("도서등록");
+		newButton.setBounds(30, 90, 150, 40);
+		newButton.addActionListener(this);
+		iFrame.add(newButton);
 
 		extProgram=new JButton("프로그램 종료");
 		extProgram.setBounds(550, 20, 120, 30);
@@ -87,7 +86,7 @@ public class LibraryMain implements ActionListener{
 		
 		iFrame.setVisible(true);
 	}
-	private void load() {
+	private void load() {//library.txt 텍스트파일에 쓰고 저장하며 도서관리내역을 저장
 		try {
 			FileInputStream fis = new FileInputStream("library.txt");
 			InputStreamReader isr = new InputStreamReader(fis, "MS949");
@@ -129,8 +128,8 @@ public class LibraryMain implements ActionListener{
 		}
 		refresh();
 	}
-	public void actionPerformed(ActionEvent iEvent) {
-		if(iEvent.getSource()==byPerson) {
+	public void actionPerformed(ActionEvent iEvent) {//이벤트 활용
+		if(iEvent.getSource()==newPerson) {//회원등록버튼
 			String name = JOptionPane.showInputDialog("이름을 입력하세요.");
 			int age = Integer.parseInt(JOptionPane.showInputDialog("나이를 입력하세요."));
 			String address = JOptionPane.showInputDialog("주소를 입력하세요.");
@@ -146,7 +145,7 @@ public class LibraryMain implements ActionListener{
 				refresh();
 				break;
 			case 2:
-				String visit = JOptionPane.showInputDialog("방문 목적을 입력하세요.");
+				String visit = JOptionPane.showInputDialog("방문 목적을 입력하세요.");//Guest에게만 방문목적 질문
 				libPerson[countPerson++] = new Guest(name, age, address, visit);
 				refresh();
 				break;
@@ -156,7 +155,7 @@ public class LibraryMain implements ActionListener{
 				break;
 			}
 		}
-		else if(iEvent.getSource()==byBook) {
+		else if(iEvent.getSource()==newButton) {//도서등록버튼
 			String name = JOptionPane.showInputDialog("책 이름을 입력하세요.");
 			String auth = JOptionPane.showInputDialog("저자를 입력하세요.");	
 			int aaa = JOptionPane.showOptionDialog(temp, "선택", "분류", 0, 0, null, category4, 0);
@@ -188,20 +187,20 @@ public class LibraryMain implements ActionListener{
 				break;
 			}
 		}
-		else if(iEvent.getSource()==Borrow){
+		else if(iEvent.getSource()==Borrow){//도서대여버튼
 			int book = bookTable.getSelectedRow();
 			int person = personTable.getSelectedRow();
 			String bookname = (String) model.getValueAt(book, 0);
 			String personname = (String) model2.getValueAt(person, 0);
-			if(model.getValueAt(book, 2) !=null){
+			if(model.getValueAt(book, 2) !=null){//이미 빌려간 도서를 대여하려고 할 때
 				JOptionPane.showMessageDialog(temp, "먼저\"" + bookname +"\"을 대여한 사람이 있습니다.");
 				return;
 			}
 			borrow(bookname, personname);
 		}
-		else if(iEvent.getSource()==Return){
+		else if(iEvent.getSource()==Return){//도서반납버튼
 			int book = bookTable.getSelectedRow();
-			if(model.getValueAt(book, 2)==null){
+			if(model.getValueAt(book, 2)==null){//대여하지 않은 도서를 반납하고자 할 때
 				JOptionPane.showMessageDialog(temp, "대여하지 않은 도서입니다.");
 			}
 			else{
@@ -213,7 +212,7 @@ public class LibraryMain implements ActionListener{
 		else
 		{
 			try {
-				FileOutputStream fos = new FileOutputStream("library.txt");
+				FileOutputStream fos = new FileOutputStream("library.txt");//library.txt에 저장
 				OutputStreamWriter osw = new OutputStreamWriter(fos, "MS949");
 				BufferedWriter bw = new BufferedWriter(osw);
 				bw.write("Book\r\n");
@@ -240,7 +239,7 @@ public class LibraryMain implements ActionListener{
 			System.exit(0);
 		}
 	}
-	private void Return(String personname, String bookname) {
+	private void Return(String personname, String bookname) {//도서반납시
 		for (int i = 0; i < countPerson; i++) {
 			if(libPerson[i].getName().equals(personname)){
 				libPerson[i].setNumofbook(libPerson[i].getNumofbook()-1);
@@ -254,7 +253,7 @@ public class LibraryMain implements ActionListener{
 			}
 		}
 	}
-	private void borrow(String bookname, String personname) {
+	private void borrow(String bookname, String personname) {//도서대여시
 		for(int i=0; i<countPerson; i++){
 			if(libPerson[i].getName().equals(personname)){
 				libPerson[i].setNumofbook(libPerson[i].getNumofbook()+1);
@@ -269,7 +268,7 @@ public class LibraryMain implements ActionListener{
 		}		
 		refresh();
 	}
-	private void refresh() {
+	private void refresh() {//행추가를 위한 refresh()
 		model = new DefaultTableModel(category, 0);
 		for(int i=0; i<countBook; i++){
 			model.addRow(libBook[i].getall());
@@ -283,7 +282,7 @@ public class LibraryMain implements ActionListener{
 		iFrame.invalidate();
 	}
 	public static void main(String[] args) {
-		LibraryMain MDisMDis=new LibraryMain();
-		MDisMDis.load();
+		LibraryMain LM=new LibraryMain();
+		LM.load();
 	}
 }

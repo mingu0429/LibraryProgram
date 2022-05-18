@@ -1,11 +1,12 @@
-import java.util.Vector;
+import java.util.Vector;//벡터를 사용
 
 public class Book {
-	boolean borrow;
-	public String name;
+	boolean borrow;//대여유무
+	public String name;//도서이름
 	int num;
-	public String auth;
+	public String auth;//도서저자
 	public String publisher;
+	String classification;//책분류
 	String personname; 
 	public Book(String name2, String auth2) {
 		borrow = false;
@@ -14,7 +15,7 @@ public class Book {
 	}
 	public Book() {} 
 	public Vector<Object> getall() { 
-		Vector<Object> myvector = new Vector<Object>();
+		Vector<Object> myvector = new Vector<Object>();//벡터생성
 		myvector.add(name);
 		myvector.add(auth);
 		myvector.add(personname);
@@ -57,7 +58,6 @@ public class Book {
 	public void setPersonname(String personname) {
 		this.personname = personname;
 	}
-	String classification;
 	public String getClassification() {
 		return classification;
 	}
